@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionsTable extends Migration
+class CrateUrlTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,18 +12,17 @@ class CreateQuestionsTable extends Migration
      * @return void
      */
     public function up()
-    {/*
-        Schema::create('question', function (Blueprint $table) {
+    {
+        Schema::create('url', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->string('text');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id')
-                ->references('id')->on('users')
+            $table->string('url');
+            $table->unsignedInteger('poll_id');
+            $table->foreign('poll_id')
+                ->references('id')->on('poll')
                 ->onDelete('cascade');
 
             $table->timestamps();
-        });*/
+        });
     }
 
     /**
@@ -33,6 +32,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-       /* Schema::dropIfExists('question');*/
+        Schema::dropIfExists('url');
     }
 }

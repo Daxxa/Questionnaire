@@ -13,5 +13,9 @@ class Poll extends Model
 {
     public $table = "poll";
     protected $fillable = ['title','text'];
-    //
+
+    /**
+     * @return string
+     */
+
 }

@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Forms\QuestionForm;
 use App\Http\Requests\addQuestionRequest;
 use App\Models\Poll;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Kris\LaravelFormBuilder\FormBuilder;
 
 class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param Poll $poll
      * @return \Illuminate\Http\Response
      */
-    public function index($poll_id)
+    public function index(Poll $poll)
     {
-        $poll = Poll::all()->find($poll_id);
-        $questions=Question::all()->where('poll_id',$poll_id);
+        $questions=Question::all()->where('poll_id',$poll->id);
         return view('question.index',['questions'=>$questions, 'poll'=>$poll]);
     }
 
@@ -26,10 +28,16 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($poll_id)
+    public function create(Poll $poll,FormBuilder $formBuilder)
     {
-        $poll = Poll::all()->find($poll_id);
-        return view('question.add',['poll'=>$poll]);
+        $form = $formBuilder->create(QuestionForm::class, [
+            'method' => 'POST',
+            'url' => route('questions.store',$poll),
+        ]);
+        $form->add('poll_id','hidden',[
+            'value'=>$poll->id
+        ]);
+        return view('question.add',compact('form'));
     }
 
     /**
@@ -75,27 +83,24 @@ class QuestionController extends Controller
      * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(addQuestionRequest $request, $id)
+    public function update(addQuestionRequest $request,Poll $poll, Question $question)
     {
-
-        $question = Question::find($id);
-        $poll_id = $question->poll_id;
         $question->fill($request->all());
-
         $question->save();
-        return redirect()->route('questions.index',$poll_id);
+        return redirect()->route('questions.index',$poll);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Question  $question
+     * @param Question $question
+     * @param Poll $poll
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Poll $poll, Question $question)
     {
-        $poll_id = Question::find($id)->poll_id;
-        Question::find($id)->delete();
-        return redirect()->route('questions.index',$poll_id);
+        $question->delete();
+        return redirect()->route('questions.index',$poll);
     }
 }

@@ -19,10 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('polls','PollController');
-Route::resource('polls/{id}/questions', 'QuestionController');
-/*Route::get('/polls','PollController@index')->name('polls');
-Route::get('/polls/create','PollController@create')->name('createPoll');
-Route::post('/polls/store','PollController@store')->name('storePoll');
-Route::get('/polls/{id}/edit','PollController@edit')->name('editPoll');
-Route::put('/polls/{id}/update','PollController@update')->name('updatePoll');
-Route::delete('/polls/{id}/destroy','PollController@destroy')->name('destroyPoll');*/
+Route::get('polls/{poll}/link','PollController@link')->name('polls.link');
+Route::resource('polls/{poll}/questions', 'QuestionController');
+Route::resource('polls/{poll}/questions/{question}/answers', 'AnswerController');
+Route::resource('questionnaire','Frontend\PollController');
