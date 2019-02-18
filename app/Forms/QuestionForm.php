@@ -9,8 +9,14 @@ class QuestionForm extends Form
     public function buildForm()
     {
         $this
-            ->add('title', 'text')
-            ->add('text', 'textarea')
-            ->add('ok','submit');
+            ->add('title', 'text',[
+                'attr' => ['placeholder' => 'Title'],
+            ])
+            ->add('text', 'textarea',[
+                'attr' => ['placeholder' => 'Description'],
+            ])
+            ->add('ok','submit',[
+                'attr' => ['class' => 'btn btn-primary'],
+            ]);
     }
 }

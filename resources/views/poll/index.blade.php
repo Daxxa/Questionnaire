@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
-    <div class="content">
-        <h2>Polls</h2>
-        <br>
-        <button onclick="location.href='{{route('polls.create')}}'" type="button" class="btn btn-secondary">Create a new poll</button>
 
+         <h1>POLLS</h1>
+         <hr>
+
+        <button onclick="location.href='{{route('polls.create')}}'" type="button" class="btn btn-secondary">Create a new poll</button>
+        <br><br>
         <table class="table">
             <thead class="thead-light">
             <tr>
@@ -41,6 +41,4 @@
 
 
 
-    </div>
-    </div>
     @endsection

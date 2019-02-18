@@ -1,94 +1,60 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <title>Questionnaire</title>
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-                text-decoration: none;
-                letter-spacing: .1rem;
-                text-transform: uppercase;
-                color: #636b6f;
-                padding: 0 25px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                    @endauth
+@section('content')
+    <div class="main-title"> <a href="{{route('polls.index')}}" class="main-title">MAKE YOUR QUESTIONNAIRE</a></div>
+<div id="fh5co-work-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 animate-box">
+                <h3 class="heading-section">A lot of questionnaires</h3>
+                <p>There are different types and spheres of polls that can make all your ideas</p>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4 col-sm-4">
+                        <div class="fh5co-grid animate-box" style="background-image: url(images/work-2.jpg);">
+                            <a class="image-popup text-center" href="#">
+                                <div class="prod-title">
+                                    <h3>Don’t Just Stand There</h3>
+                                    <span>Illustration, Print</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8">
+                        <div class="fh5co-grid animate-box" style="background-image: url(images/work-3.jpg);">
+                            <a class="image-popup text-center" href="#">
+                                <div class="prod-title">
+                                    <h3>Don’t Just Stand There</h3>
+                                    <span>Illustration, Print</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8">
+                        <div class="fh5co-grid animate-box" style="background-image: url(images/work-4.jpg);">
+                            <a class="image-popup text-center" href="#">
+                                <div class="prod-title">
+                                    <h3>Don’t Just Stand There</h3>
+                                    <span>Illustration, Print</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="fh5co-grid animate-box" style="background-image: url(images/work-5.jpg);">
+                            <a class="image-popup text-center" href="#">
+                                <div class="prod-title">
+                                    <h3>Don’t Just Stand There</h3>
+                                    <span>Illustration, Print</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    <a href="{{ url('/home') }}">Go Home</a>
-                </div>
-
-
             </div>
         </div>
-    </body>
-</html>
+    </div>
+</div>
+
+@endsection

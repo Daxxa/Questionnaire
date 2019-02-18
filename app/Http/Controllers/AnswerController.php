@@ -50,7 +50,7 @@ class AnswerController extends Controller
     public function addMany($form, $question, $answers, $oneanswer)
     {
         $form->addBefore('question_id','question_id','hidden',[
-            'value'=>$question->id
+            'value'=>$question->id,
         ]);
         $type = ' ';
         foreach ($answers as $answer){
@@ -73,7 +73,7 @@ class AnswerController extends Controller
                 'empty_value' => '=== Select type ==='
             ]);
         $form->addBefore('title','title','text',[
-            'value'=>$oneanswer->title
+            'value'=>$oneanswer->title,
         ]);
     }
     /**

@@ -8,9 +8,10 @@
                 <li>{{$answer->title}}</li>
             @endforeach
         </ul>
+        <div class="col-md-8 col-md-offset-2">
         <h3>Add a new answer</h3>
         <div class="row">
-            <div class="col-md-8">
+
                 @include('errors')
                 {!! form($form) !!}
 

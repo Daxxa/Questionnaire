@@ -26,7 +26,7 @@ class PollController extends Controller
     {
         $form = $formBuilder->create(PassPollForm::class, [
             'method' => 'POST',
-            'url' => route('polls.store'),
+            'url' => route('questionnaire.store'),
         ]);
         $url = Url::where('url',$unique)->first();
         if ($url->count()!=0) {

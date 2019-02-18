@@ -21,6 +21,7 @@
                 {!! form($formAdd) !!}
 
             </div>
+            <br>
             <h2>Answers</h2>
 
             @foreach($forms as $form)

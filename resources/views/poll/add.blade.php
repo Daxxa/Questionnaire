@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <h3>Create a new poll</h3>
+        <div class="col-md-8 col-md-offset-2">
+        <h2>Create a new poll</h2>
         <div class="row">
-            <div class="col-md-8">
                 @include('errors')
 
                 {!! form($form) !!}

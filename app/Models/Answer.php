@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Model
-{
-    public $table = "answer";
-    protected $fillable = ['title','type','question_id'];
-}
+    class Answer extends Model
+    {
+        public $table = "answer";
+        protected $fillable = ['title','type','question_id'];
+    }
