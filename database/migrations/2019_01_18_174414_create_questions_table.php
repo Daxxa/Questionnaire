@@ -12,7 +12,7 @@ class CreateQuestionsTable extends Migration
      * @return void
      */
     public function up()
-    {/*
+    {
         Schema::create('question', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
@@ -23,7 +23,7 @@ class CreateQuestionsTable extends Migration
                 ->onDelete('cascade');
 
             $table->timestamps();
-        });*/
+        });
     }
 
     /**
@@ -33,6 +33,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-       /* Schema::dropIfExists('question');*/
+      Schema::dropIfExists('question');
     }
 }
