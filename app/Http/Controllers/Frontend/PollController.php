@@ -7,9 +7,11 @@ use App\Http\Requests\addPassPollRequest;
 use App\Models\AnonAnswer;
 use App\Models\Answer;
 use App\Models\CommentAnswer;
+use App\Models\IncludedPolls;
 use App\Models\Poll;
 use App\Models\Question;
 use App\Models\Url;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +35,7 @@ class PollController extends Controller
             $questions =$this->getQuestions($url->poll_id);
             foreach ($questions as $question){
                 $answers = Answer::all()->where('question_id',$question->id);
+                if($answers->count() != 0)
                 if(($answers->first()->type == "checkbox")||($answers->first()->type == "radiobutton")){
                     if($answers->first()->type == "checkbox"){
                         $multiple = true;
@@ -85,6 +88,11 @@ class PollController extends Controller
     {
         $poll = Poll::where('id', $poll_id)->first();
         $questions = Question::all()->where('poll_id', $poll->id);
+        $included_polls = IncludedPolls::all()->where('poll_id',$poll->id);
+        $included_questions =new Collection();
+        foreach ($included_polls as $one)
+            $included_questions =$included_questions->merge(Question::all()->where('poll_id',$one->included_poll_id));
+        $questions = $questions->merge($included_questions);
         return $questions;
     }
 

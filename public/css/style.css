@@ -150,7 +150,7 @@ figure {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 1;
+
   background: rgba(141, 113, 96, 0.3);
 }
 
@@ -366,7 +366,7 @@ figure {
   position: absolute;
   left: 0;
   width: 100%;
-  z-index: 2;
+
 
 }
 
@@ -593,8 +593,8 @@ h3.heading-section:before {
 }
 
 .work-wrap {
-  height: 100vh;
-  width: 100vw;
+
+
   content: 'viewport-units-buggyfill; height:100vh; width:100vw';
   display: table;
   position: relative;
@@ -603,7 +603,7 @@ h3.heading-section:before {
 .work-wrap .fh5co-project-inner {
   display: table-cell;
   vertical-align: middle;
-  height: 100vh;
+  height: 70vh;
   width: 100vw;
   content: 'viewport-units-buggyfill; height:100vh; width:100vw';
   position: relative;
@@ -841,7 +841,7 @@ h3.heading-section:before {
 }
 
 #fh5co-blog-section, #fh5co-start-project-section {
-  background: #184bde;
+  background: rgb(221, 212, 207);;
   padding: 5em 0;
 }
 #fh5co-blog-section h3.heading-section, #fh5co-start-project-section h3.heading-section {

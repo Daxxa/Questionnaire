@@ -4,13 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Forms\QuestionForm;
 use App\Http\Requests\addQuestionRequest;
+use App\Models\AnonAnswer;
+use App\Models\Answer;
+use App\Models\IncludedPolls;
 use App\Models\Poll;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 class QuestionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +30,12 @@ class QuestionController extends Controller
     public function index(Poll $poll)
     {
         $questions=Question::all()->where('poll_id',$poll->id);
-        return view('question.index',['questions'=>$questions, 'poll'=>$poll]);
+        $polls = Poll::all()->where('user_id',Auth::id())->where('id','!=',$poll->id);
+        $included_polls = IncludedPolls::all()->where('poll_id',$poll->id);
+        $included_questions =new Collection();
+        foreach ($included_polls as $one)
+            $included_questions =$included_questions->merge(Question::all()->where('poll_id',$one->included_poll_id));
+        return view('question.index',['questions'=>$questions, 'poll'=>$poll,'polls'=>$polls, 'included_polls'=>$included_polls, 'included_questions'=>$included_questions]);
     }
 
     /**
@@ -102,5 +117,24 @@ class QuestionController extends Controller
     {
         $question->delete();
         return redirect()->route('questions.index',$poll);
+    }
+    public function chart(Request $request)
+    {
+        $answers = Answer::all()->where('question_id',$request->question_id);
+        $array = array();
+        foreach ($answers as $answer)
+        {
+            $y =AnonAnswer::all()->where('poll_id',$request->poll_id)->where('answer_id',$answer->id)->first();
+            if ($y) $y = $y->count;
+            else $y = 0;
+            $tmp_array = array("y"=>$y,'label'=>$answer->title,);
+            array_push($array,$tmp_array);
+        }
+        return json_encode($array, JSON_NUMERIC_CHECK);
+        return response()->json([
+            'message' => "TRUE",
+            'data'=>json_encode($array, JSON_NUMERIC_CHECK)
+
+        ]);
     }
 }

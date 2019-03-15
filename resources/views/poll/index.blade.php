@@ -4,7 +4,7 @@
          <h1>POLLS</h1>
          <hr>
 
-        <button onclick="location.href='{{route('polls.create')}}'" type="button" class="btn btn-secondary">Create a new poll</button>
+        <a href='{{route('polls.create')}}' type="button" class="btn btn-secondary">Create a new poll</a>
         <br><br>
         <table class="table">
             <thead class="thead-light">
@@ -23,15 +23,16 @@
                     <th scope="row">{{$poll->title}}</th>
                     <td>{{$poll->text}}</td>
                     <td>{{$poll->created_at}}</td>
+                        <td><button onclick="location.href='{{route('questions.index',$poll)}}'" type="button" class="btn btn-secondary">Questions</button></td>
                         <td><button onclick="location.href='{{route('polls.link',$poll)}}'" type="button" class="btn btn-secondary">Generete a link</button></td>
                         <td><button onclick="location.href='{{route('polls.edit',$poll)}}'" type="button" class="btn btn-secondary">Edit</button></td>
                     <td>
                         {!! Form::open(['method'=>'DELETE',
                         'route'=>['polls.destroy',$poll]]) !!}
-                        <button onclick="return confirm('Do you want to delete?')" class="btn btn-secondary">Delete</button>
+                        <button type="submit" class="btn btn-secondary" id="delete-{{$poll->id}}">Delete</button>
                         {!! Form::close() !!}
                     </td>
-                    <td><button onclick="location.href='{{route('questions.index',$poll)}}'" type="button" class="btn btn-secondary">Questions</button></td>
+                    <td><button onclick="location.href='{{route('polls.show',$poll)}}'" type="button" class="btn btn-secondary">Results</button></td>
                     </a>
                 </tr>
 

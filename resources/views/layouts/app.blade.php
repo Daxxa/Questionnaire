@@ -1,3 +1,4 @@
+@yield('tops')
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -18,7 +19,7 @@
     <link rel="shortcut icon" href="favicon.ico">
 
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300' rel='stylesheet' type='text/css'>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- Animate.css -->
     <link rel="stylesheet" href="{{ asset('css/newstyle.css') }}">
 
@@ -42,6 +43,7 @@
 
 </head>
 <body>
+
 <div id="fh5co-wrapper">
     <div id="fh5co-page">
         <div id="fh5co-header">
@@ -50,13 +52,14 @@
                     <div class="nav-header">
                         <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
                         <h1 id="fh5co-logo"><a href={{ url('/') }}>Questionnaire</a></h1>
+
                         <!-- START #fh5co-menu-wrap -->
                         <nav id="fh5co-menu-wrap" role="navigation">
                             <ul class="sf-menu" id="fh5co-primary-menu">
                                 <li class="active">
-                                    <a href="{{ route('login') }}">Home</a>
+                                    <a href="{{ url('/') }}">Home</a>
                                 </li>
-                                <li><a href="{{ route('login') }}">About</a></li>
+                                <li><a href="{{ route('use') }}">How to use</a></li>
                                 @guest
                                     <li><a href="{{ route('login') }}">Login</a></li>
                                     <li><a href="{{ route('register') }}">Register</a></li>
@@ -127,5 +130,6 @@
 
 <!-- Main JS (Do not remove) -->
 <script src="{{ asset('js/main.js') }}"></script>
+@yield('script')
 </body>
 </html>

@@ -1,16 +1,26 @@
+.chart-btn{
+    border: 1px solid #dddddd36;
+    background: #ddd4cf96;
+    display: inline-block;
+}
 .tbl-question{
     border: 1px solid silver;
     background-color: #fefefe;
 }
 .qtn-title{
     border: none;
+    height: 59.2px;
+    font-weight: 600;
+    font-size: x-large;
 }
 .qtn-button{
     width: 10px;
     border: none;
+    height: 58.4px;
 }
 .container-rel{
     position: relative;
+    clear: both;
 }
 .container-abs {
     position: absolute;
@@ -93,3 +103,74 @@
 .poll-qtn-title{
 
 }
+.poll-awr-count{
+    border-radius: 7px;
+    background-color: #ffffffd9;
+    width: fit-content;
+    padding: 0px 20px;
+    margin: -41px 10px 5px 10px;
+    font-size: 24px;
+    border: 1px solid #b9b2ae;
+}
+.poll-awr-count-input{
+    border-radius: 7px;
+    background-color: #ffffffd9;
+    width: fit-content;
+    padding: 0px 20px;
+    margin: -17px 10px -10px 10px;
+    font-size: 24px;
+    border: 1px solid #b9b2ae;
+}
+.inline-block{
+    margin-top: 3px;
+    background-color: #fbfaf9;
+    padding: 5px;
+    border-radius: 7px;
+    padding-left: 80px;
+}
+.padding-20{
+    padding-left: 80px;
+    padding-top: 20px;
+    font-weight: bold;
+    border-top: 3px solid #ddd4cf;
+
+}
+.count-title{
+    position: absolute;
+    border-radius: 7px;
+    background-color: #ccc2bd;
+    color: #2c2c2cc2;
+    width: fit-content;
+    padding: 5px 15px;
+    font-size: larger;
+    margin-top: 15px;
+    border: 1px solid #b9b2ae;
+}
+.modal-dialog{
+    margin-top: 200px;
+}
+.modal-backdrop .in{
+    position: unset;
+}
+.lh-40{
+    line-height: 40px;
+}
+#included-polls{
+    border-radius: 10px;
+    border: 1px solid #dddddd;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+.padding-10{
+    padding: 10px;
+}
+.border-bottom{
+    border-bottom: 1px solid #dddddd63;
+}
+.included-div{
+    border-radius: 10px;
+    background-color: #dddddd36;
+    padding: 10px;
+}
+

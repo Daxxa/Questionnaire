@@ -18,8 +18,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('polls','PollController');
-Route::get('polls/{poll}/link','PollController@link')->name('polls.link');
-Route::resource('polls/{poll}/questions', 'QuestionController');
-Route::resource('polls/{poll}/questions/{question}/answers', 'AnswerController');
+Route::get('/use', 'Controller@use')->name('use');
+    Route::resource('polls', 'PollController');
+    Route::get('polls/{poll}/link', 'PollController@link')->name('polls.link');
+    Route::resource('polls/{poll}/questions', 'QuestionController');
+    Route::resource('polls/{poll}/questions/{question}/answers', 'AnswerController');
+    Route::post('polls.include', 'PollController@include')->name('polls.include');
 Route::resource('questionnaire','Frontend\PollController');
+Route::post('questions.chart', 'QuestionController@chart')->name('questions.chart');
