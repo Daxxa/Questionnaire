@@ -253,6 +253,8 @@ class PollController extends Controller
                         foreach ($answers as $answer){
                             $form->add($answer->title, 'radio', [
                                 'value' => 1,
+                                'attr'=>['id'=>$answer->id],
+                                'label'=>$answer->title,
                                 'checked' => true,
                                 'label_attr' => ['class' => 'label-class'],
                                 'wrapper' => ['class' => 'inline-block'],
