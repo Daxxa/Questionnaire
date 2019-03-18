@@ -232,9 +232,12 @@ class PollController extends Controller
                 if ($answers->count() !=0)
                     if($answers->first()->type == "checkbox"){
                         foreach ($answers as $answer){
-                            $form->add($answer->title, 'checkbox', [
+                            $form->add($answer->id, 'checkbox', [
                                 'value' => 1,
                                 'checked' => true,
+                                'attr'=>['id'=>$answer->id,'name'=>$answer->id],
+                                'label'=>$answer->title,
+                                'name'=>$answer->id,
                                 'label_attr' => ['class' => 'label-class'],
                                 'wrapper' => ['class' => 'inline-block'],
                             ]);
