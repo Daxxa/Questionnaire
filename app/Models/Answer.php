@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
     {
         public $table = "answer";
         protected $fillable = ['title','type','question_id'];
+        public function question()
+        {
+            return $this->belongsTo(Question::class);
+        }
+        public function anon_answers()
+        {
+            return $this->hasMany(AnonAnswer::class);
+        }
     }
+

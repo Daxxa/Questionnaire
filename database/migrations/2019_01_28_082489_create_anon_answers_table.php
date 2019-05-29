@@ -16,7 +16,8 @@ class CreateAnonAnswersTable extends Migration
         Schema::create('anon_answers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('poll_id');
-            $table->integer('count');
+            $table->unsignedInteger('anon_id');
+
             $table->foreign('poll_id')
                 ->references('id')->on('poll')
                 ->onDelete('cascade');
@@ -24,6 +25,9 @@ class CreateAnonAnswersTable extends Migration
             $table->foreign('answer_id')
                 ->references('id')->on('answer')
                 ->onDelete('cascade');
+            $table->foreign('anon_id')
+                            ->references('id')->on('anons')
+                            ->onDelete('cascade');
             $table->timestamps();
         });
     }

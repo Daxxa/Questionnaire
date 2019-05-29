@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Forms\PassPollForm;
 use App\Http\Requests\addPassPollRequest;
+use App\Models\Anon;
 use App\Models\AnonAnswer;
 use App\Models\Answer;
 use App\Models\CommentAnswer;
@@ -24,65 +25,74 @@ class PollController extends Controller
         $polls = Poll::all();
         return view('frontend.poll.index',compact('polls'));
     }
-    public function show($unique, FormBuilder $formBuilder)
+    public function show(Request $request, $unique, FormBuilder $formBuilder)
     {
+        $anon = $this->addOrUpdateAnon($request);
         $form = $formBuilder->create(PassPollForm::class, [
             'method' => 'POST',
             'url' => route('questionnaire.store'),
         ]);
         $url = Url::where('url',$unique)->first();
-        if ($url->count()!=0) {
-            $questions =$this->getQuestions($url->poll_id);
-            foreach ($questions as $question){
-                $answers = Answer::all()->where('question_id',$question->id);
-                if($answers->count() != 0)
-                if(($answers->first()->type == "checkbox")||($answers->first()->type == "radiobutton")){
-                    if($answers->first()->type == "checkbox"){
-                        $multiple = true;
-                        $required = '';
-                    }else{
-                        $multiple = false;
-                        $required = 'required';
-                    }
-                    $array = array();
-                    foreach ($answers as $answer){
-                        $array[$answer->id] = $answer->title;
-                    }
-                    $form->add($question->id, 'choice', [
-                        'choices' => $array,
-                        'choice_options' => [
-                            'wrapper' => ['class' => 'choice-wrapper'],
-                            'label_attr' => ['class' => 'label-class'],
-                        ],
-                        'selected' =>[],
-                        'expanded' => true,
-                        'multiple' => $multiple,
-                        'rules' => $required,
-                        'label'=>$question->text,
-                        'label_show'=>true,
-                        'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
-                        'attr'=>['class'=>'btn-choice']
-                    ]);
-                }else {
-                    $form->add($answers->first()->id, 'textarea',[
-                        'rules' => 'required|min:5',
-                        'label'=>$question->text,
-                        'label_show'=>true,
-                        'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
-                    ]);
-                }
+        $poll = Poll::find($url->poll_id)->first();
+        $answers = $poll->questions()->get()->first()->answers()->get();
+        $anon = AnonAnswer::whereIn('answer_id', $answers->pluck('id'))->where('anon_id',$request->session()->get('anon_id'))->get()->toArray();
+        if (count($anon) == 0){
+            if ($url->count()!=0) {
+                $questions =$this->getQuestions($url->poll_id);
+                foreach ($questions as $question){
+                    $answers = Answer::all()->where('question_id',$question->id);
+                    if($answers->count() != 0)
+                        if(($answers->first()->type == "checkbox")||($answers->first()->type == "radiobutton")){
+                            if($answers->first()->type == "checkbox"){
+                                $multiple = true;
+                                $required = '';
+                            }else{
+                                $multiple = false;
+                                $required = 'required';
+                            }
+                            $array = array();
+                            foreach ($answers as $answer){
+                                $array[$answer->id] = $answer->title;
+                            }
+                            $form->add($question->id, 'choice', [
+                                'choices' => $array,
+                                'choice_options' => [
+                                    'wrapper' => ['class' => 'choice-wrapper'],
+                                    'label_attr' => ['class' => 'label-class'],
+                                ],
+                                'selected' =>[],
+                                'expanded' => true,
+                                'multiple' => $multiple,
+                                'rules' => $required,
+                                'label'=>$question->text,
+                                'label_show'=>true,
+                                'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
+                                'attr'=>['class'=>'btn-choice']
+                            ]);
+                        }else {
+                            $form->add($answers->first()->id, 'textarea',[
+                                'rules' => 'required|min:5',
+                                'label'=>$question->text,
+                                'label_show'=>true,
+                                'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
+                            ]);
+                        }
 
+                }
+                $form->add('poll_id','hidden',[
+                    'value'=>$url->poll_id
+                ]);
+                $form->add('Send','submit',[
+                    'attr' => ['class' => 'btn-awr'],
+                ]);
+            }else {
+                dd('error');
             }
-            $form->add('poll_id','hidden',[
-                'value'=>$url->poll_id
-            ]);
-            $form->add('Send','submit',[
-                'attr' => ['class' => 'btn-awr'],
-            ]);
-        }else {
-            dd('error');
+            return view('frontend.poll.show', compact('form'));
+        } else {
+            return view('error.exist');
         }
-        return view('frontend.poll.show', compact('form'));
+
     }
     private function getQuestions($poll_id)
     {
@@ -113,15 +123,16 @@ class PollController extends Controller
            foreach($data as $id => $value){
                if (is_array($value)) {
                    foreach ($value as $one) {
-                       $this->addOrUpdate($poll_id,$one);
+                       $this->addOrUpdate($poll_id, $one);
                    }
                }elseif ($id !='poll_id'){
-                   if(Answer::find($value) == null ){
+                   if (Answer::find($id)->type == "radiobutton"){
+                       $this->addOrUpdate($poll_id, $value);
+
+                   }else {
                        $text = $value;
                        $value = $id;
-                   }
-                   $anonAnswerId = $this->addOrUpdate($poll_id,$value);
-                   if($value == $id){
+                       $anonAnswerId = $this->addOrUpdate($poll_id, $value);
                        $comment = new CommentAnswer();
                        $comment->text = $text;
                        $comment->anon_answer_id = $anonAnswerId;
@@ -133,19 +144,46 @@ class PollController extends Controller
         }
 
     }
-    private function addOrUpdate($poll_id,$one)
+    private function addOrUpdate($poll_id, $one)
     {
-        $anonAnswer = AnonAnswer::where('poll_id', $poll_id)->where('answer_id', $one)->first();
+        $answer = Answer::findOrFail($one);
+        if ($answer != null)
+        $answer->question()->first()->answers()->get();
+        $anonAnswer = AnonAnswer::where('poll_id', $poll_id)->where('answer_id', $one)->where('anon_id', session()->get('anon_id'))->first();
         if ($anonAnswer == null) {
             $anonAnswer = new AnonAnswer();
             $anonAnswer->poll_id = $poll_id;
             $anonAnswer->answer_id = $one;
-            $anonAnswer->count = 1;
+            $anonAnswer->anon_id = session()->get('anon_id');
             $anonAnswer->save();
         } else {
-            $anonAnswer->count = $anonAnswer->count + 1;
             DB::table('anon_answers')->where('id', $anonAnswer->id)->update($anonAnswer->toArray());
         }
         return $anonAnswer->id;
+    }
+    private function addOrUpdateAnon(Request $request)
+    {
+
+        $anon = new Anon();
+        $anon->ip = $request->server('SERVER_NAME');
+        $anon->browser = $request->server('HTTP_USER_AGENT');
+        $anonExisted = Anon::all()->where('ip', $anon->ip )->where('browser', $anon->browser)->first();
+        if ($anonExisted == null){
+            $anon->save();
+            session()->put('anon_id', $anon->id);
+            return $anon;
+        }
+        session()->put('anon_id', $anonExisted->id);
+
+        return $anonExisted;
+    }
+
+    private function checkAnonInPoll()
+    {
+        $anon = AnonAnswer::all()->where('poll_id', $poll_id)->where('anon_id', $anon_id)->first();
+        if ($anon == null){
+            return true;
+        }
+        return false;
     }
 }

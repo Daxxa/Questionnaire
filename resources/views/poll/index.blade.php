@@ -33,6 +33,7 @@
                         {!! Form::close() !!}
                     </td>
                     <td><button onclick="location.href='{{route('polls.show',$poll)}}'" type="button" class="btn btn-secondary">Results</button></td>
+                        <td><button onclick="location.href='{{route('polls.edit',$poll)}}'" type="button" class="btn btn-secondary">Reports</button></td>
                     </a>
                 </tr>
 

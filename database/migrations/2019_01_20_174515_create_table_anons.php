@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionsTable extends Migration
+class CreateTableAnons extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,10 @@ class CreateQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('question', function (Blueprint $table) {
+        Schema::create('anons', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->string('text');
-            $table->unsignedInteger('poll_id');
-            $table->foreign('poll_id')
-                ->references('id')->on('poll')
-                ->onDelete('cascade');
-
+            $table->text('ip');
+            $table->text('browser');
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('question');
+        Schema::dropIfExists('anons');
     }
 }

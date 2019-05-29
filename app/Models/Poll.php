@@ -18,4 +18,9 @@ class Poll extends Model
      * @return string
      */
 
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
 }
