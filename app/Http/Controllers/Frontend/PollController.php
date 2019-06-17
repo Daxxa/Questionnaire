@@ -33,15 +33,15 @@ class PollController extends Controller
             'url' => route('questionnaire.store'),
         ]);
         $url = Url::where('url',$unique)->first();
-        $poll = Poll::find($url->poll_id)->first();
+        $poll = Poll::findOrFail($url->poll_id);
         $answers = $poll->questions()->get()->first()->answers()->get();
-        $anon = AnonAnswer::whereIn('answer_id', $answers->pluck('id'))->where('anon_id',$request->session()->get('anon_id'))->get()->toArray();
+        $anon = AnonAnswer::where('anon_id',$request->session()->get('anon_id'))->where('poll_id',$poll->id)->get()->toArray();
         if (count($anon) == 0){
             if ($url->count()!=0) {
                 $questions =$this->getQuestions($url->poll_id);
                 foreach ($questions as $question){
                     $answers = Answer::all()->where('question_id',$question->id);
-                    if($answers->count() != 0)
+                    if($answers->count() != 0){
                         if(($answers->first()->type == "checkbox")||($answers->first()->type == "radiobutton")){
                             if($answers->first()->type == "checkbox"){
                                 $multiple = true;
@@ -69,7 +69,29 @@ class PollController extends Controller
                                 'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
                                 'attr'=>['class'=>'btn-choice']
                             ]);
-                        }else {
+                        }else if(($answers->first()->type == "numberInput")){
+                            $form->add($answers->first()->id, 'number',[
+                                'rules' => 'required|min:0',
+                                'label'=>$question->text,
+                                'label_show'=>true,
+                                'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
+                            ]);
+                        }else if($answers->first()->type == "map") {
+                            $form->add(uniqid(), 'static', [
+                                'label'=>$question->text,
+                                'label_attr' => ['class' => 'poll-qtn-text'],
+                                'tag' => 'div', // Tag to be used for holding static data,
+                                'attr' => ['class' => 'map', 'id' => 'map', 'answerId' => $answers->first()->id], // This is the default
+                                'value' => $answers->first()->title // If nothing is passed, data is pulled from model if any
+                            ])
+
+                            ->add($answers->first()->id, 'text',[
+                                'attr' => ['placeholder' => 'Place', 'class' => 'form-control coordinate'],
+                                'label'=>"Place",
+                                'label_show'=>true,
+                            ]);
+                        }else
+                        {
                             $form->add($answers->first()->id, 'textarea',[
                                 'rules' => 'required|min:5',
                                 'label'=>$question->text,
@@ -77,7 +99,13 @@ class PollController extends Controller
                                 'label_attr' => ['class' => 'poll-qtn-text', 'for' => $question->text],
                             ]);
                         }
-
+                        $form->add(uniqid(), 'static', [
+                            'tag' => 'div', // Tag to be used for holding static data,
+                            'attr' => ['class' => 'extra'], // This is the default
+                            'value' => $question->extra,
+                            'label_show' => false// If nothing is passed, data is pulled from model if any
+                        ]);
+                    }
                 }
                 $form->add('poll_id','hidden',[
                     'value'=>$url->poll_id
@@ -119,16 +147,19 @@ class PollController extends Controller
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         } else{
            $data = $request->except('_token');
+           //dd($data);
            $poll_id = $request->input('poll_id');
            foreach($data as $id => $value){
+               var_dump($id);
+
                if (is_array($value)) {
                    foreach ($value as $one) {
                        $this->addOrUpdate($poll_id, $one);
                    }
                }elseif ($id !='poll_id'){
-                   if (Answer::find($id)->type == "radiobutton"){
+                   $answer = Answer::all()->where('id', $value)->where('question_id', $id);
+                   if (count($answer)){
                        $this->addOrUpdate($poll_id, $value);
-
                    }else {
                        $text = $value;
                        $value = $id;

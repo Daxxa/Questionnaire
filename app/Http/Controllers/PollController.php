@@ -16,12 +16,15 @@ use App\Reports\Report1;
 use App\User;
 
 use ArrayObject;
+//use \PDF;
+use Knp\Snappy\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests\addPollRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 
@@ -110,9 +113,6 @@ class PollController extends Controller
         $form = $this->show_results($questions, $form, $poll);
         $array = array();
 
-        for ($i = 0; $i < $questions->count(); $i++) {
-
-        }
         $included_form = $formBuilder->create(PassPollForm::class, [
         ]);
         $included_polls = IncludedPolls::all()->where('poll_id', $poll->id);
@@ -193,7 +193,7 @@ class PollController extends Controller
                                 'attr' => ['id' => $answer->id, 'name' => $answer->id],
                                 'label' => $answer->title,
                                 'name' => $answer->id,
-                                'label_attr' => ['class' => 'label-class'],
+                                'label_attr' => ['class' => 'label-class', 'for' => $question->title],
                                 'wrapper' => ['class' => 'inline-block'],
                             ]);
                             $anonAnswer = AnonAnswer::where('poll_id', $poll->id)->where('answer_id', $answer->id)->get();
@@ -214,7 +214,7 @@ class PollController extends Controller
                                 'attr' => ['id' => $answer->id],
                                 'label' => $answer->title,
                                 'checked' => true,
-                                'label_attr' => ['class' => 'label-class'],
+                                'label_attr' => ['class' => 'label-class', 'for' => $question->title],
                                 'wrapper' => ['class' => 'inline-block'],
                             ]);
                             $anonAnswer = AnonAnswer::where('poll_id', $poll->id)->where('answer_id', $answer->id)->get();
@@ -243,15 +243,14 @@ class PollController extends Controller
                             ]);
                             $commentAnswers = null;
                             foreach ($anonAnswer as $anonAnswerOne)
-                                if ($anonAnswer != null)
-                                {
+                                if ($anonAnswer != null) {
                                     $commentAnswer = CommentAnswer::where('anon_answer_id', $anonAnswerOne->id)->first();
                                     if ($commentAnswer != null)
-                                    $form->add(uniqid(), 'textarea', [
-                                        'label_show' => false,
-                                        'value' => $commentAnswer->text,
-                                        'attr' => ['readonly', 'rows' => '3'],
-                                    ]);
+                                        $form->add(uniqid(), 'textarea', [
+                                            'label_show' => false,
+                                            'value' => $commentAnswer->text,
+                                            'attr' => ['readonly', 'rows' => '3'],
+                                        ]);
                                 }
 
                         }
@@ -323,10 +322,5 @@ class PollController extends Controller
         return $data = 1;
     }
 
-    public function report1()
-    {
-        $report1 = new Report1();
-        $report1->run()->render('reports.report1');
-    }
 
 }

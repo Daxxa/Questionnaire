@@ -15,6 +15,9 @@ class QuestionForm extends Form
             ->add('text', 'textarea',[
                 'attr' => ['placeholder' => 'Description'],
             ])
+            ->add('extra', 'textarea', [
+                'attr' => ['class' => 'editor-body']
+            ] )
             ->add('ok','submit',[
                 'attr' => ['class' => 'btn btn-primary'],
             ]);

@@ -13,6 +13,9 @@
                     </textarea></td>
     </tr>
     <tr>
+        <td colspan="2"><textarea class="editor-body" name="extra">{{$question->extra}}</textarea></td>
+    </tr>
+    <tr>
         <td >The last modification: {{$question->updated_at}}</td>
         <td class="qtn-button">
             <button class="btn button-secondary">Save</button>

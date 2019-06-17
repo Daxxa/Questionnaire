@@ -16,12 +16,15 @@
 
 
             @include('errors')
-            <h4 class="awr-add-title">Add answer</h4>
-            <div class="awr-add">
-                {!! form($formAdd) !!}
+            @if(isset($formAdd))
+                <h4 class="awr-add-title">Add answer</h4>
+                <div class="awr-add">
+                    {!! form($formAdd) !!}
 
-            </div>
-            <br>
+                </div>
+                <br>
+            @endif
+
             <h2>Answers</h2>
 
             @foreach($forms as $form)
@@ -42,3 +45,18 @@
         </div>
     </div>
 @endsection
+@section('script')
+    <!-- include libraries(jQuery, bootstrap) -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+
+    <!-- include summernote css/js-->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.editor-body').summernote();
+        });
+    </script>
+    @endsection

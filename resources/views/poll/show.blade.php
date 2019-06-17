@@ -32,6 +32,7 @@
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 @endsection
 @section('script')
+
     <script>
         $('.list_question').on('click', function () {
             var list1 = $('#question_1');
@@ -183,6 +184,7 @@
 
             }
         });
-        
+
     </script>
+
 @endsection

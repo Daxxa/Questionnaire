@@ -68,4 +68,13 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    public function agreement()
+    {
+        return view('auth.agreement');
+    }
+    public function agree()
+    {
+        return redirect()->back()->withInput();
+    }
 }

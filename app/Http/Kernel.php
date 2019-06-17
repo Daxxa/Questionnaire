@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
-        'checkAnon' => \App\Http\Middleware\checkAnon::class
+        'checkAnon' => \App\Http\Middleware\checkAnon::class,
+        'moderator' => \App\Http\Middleware\Moderator::class
     ];
 }

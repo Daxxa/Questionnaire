@@ -1,8 +1,10 @@
 @extends('layouts.app')
 @section('content')
+
     <div class="content">
         <div class="container">
         <h2>Questions</h2>
+
             @include('errors')
         <button onclick="location.href='{{route('questions.create',$poll)}}'" type="button" class="btn btn-secondary">Add a new question</button>
             <a  type="button" class="btn btn-secondary open-included">Include another poll</a>
@@ -16,6 +18,15 @@
                         @else Add @endif</button>
                     <br>
                     </div>
+                    @endforeach
+               <div class="padding-10 font-size-30 margin-auto"><b>Patterns</b></div>
+                    @foreach($mainPolls as $one)
+                        <div class="padding-10 border-bottom">
+                            <div class="col-md-10 lh-40">{{$one->title}}</div>
+                            <button id="{{$one->id}}" class="btn btn-secondary include" >@if((count($included_polls->where('included_poll_id',$one->id)->toArray()))!=0)<span class="glyphicon glyphicon-ok"></span>
+                                @else Add @endif</button>
+                            <br>
+                        </div>
                     @endforeach
                 <div class="col-md-offset-10">
                     <a  type="button" class="btn btn-secondary close-included"><span class="glyphicon glyphicon-remove"></span></a>
@@ -134,6 +145,21 @@
         });
         $('.open-included').on('click',function(){
             $('.included-poll').removeClass('hidden');
+        });
+
+
+    </script>
+    <!-- include libraries(jQuery, bootstrap) -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+
+    <!-- include summernote css/js-->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.editor-body').summernote();
         });
     </script>
 @endsection

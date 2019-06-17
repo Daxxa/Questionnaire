@@ -8,13 +8,19 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.0.0",
+        "barryvdh/laravel-dompdf": "^0.8.4",
+        "barryvdh/laravel-snappy": "^0.4.4",
         "fideloper/proxy": "~3.3",
         "fxss/class.table.php": "dev-master",
+        "h4cc/wkhtmltopdf-amd64": "0.12.x",
+        "knplabs/knp-snappy": "^1.1",
         "koolphp/koolreport": "^3.25",
+        "koolreport/laravel": "^1.5",
         "kris/laravel-form-builder": "^1.16",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "laravelcollective/html": "^5.5"
+        "laravelcollective/html": "^5.5",
+        "unisharp/laravel-filemanager": "dev-master"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

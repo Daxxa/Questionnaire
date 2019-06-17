@@ -2,42 +2,26 @@
 
 
 namespace App\Reports;
-
+use koolreport;
 use koolreport\processes\Custom;
 use koolreport\processes\Group;
 use koolreport\processes\RemoveColumn;
 use koolreport\processes\Sort;
+use koolreport\laravel\Friendship;
 
 class Report1 extends \koolreport\KoolReport
 {
-    use koolreport\laravel\Friendship;
+    protected $poll;
+    use Friendship;
 
-    protected function settings()
-    {
-        //Define the "sales" data source which is the orders.csv
-        return array(
-            "dataSources"=>array(
-                "question"=>array(
-                    'host' => 'localhost',
-                    'username' => 'admin',
-                    'password' => '1111',
-                    'dbname' => 'question',
-                    'charset' => 'utf8',
-                    'class' => "\koolreport\datasources\MySQLDataSource",
-
-                ),
-            ),
-
-        );
-    }
 
     protected function setup()
     {
-        //Select the data source then pipe data through various process
-        //until it reach the end which is the dataStore named "sales_by_customer".
-        $this->src()->query('SELECT q.title as Question,  aw.title as Answer,  aa.id as aa FROM question.answer aw
+        $this->src("mysql")->query('SELECT q.title as Question,  aw.title as Answer,  aa.id as aa FROM question.answer aw
 LEFT JOIN question.anon_answers aa ON aw.id = aa.answer_id
-INNER JOIN question.question q ON q.id = aw.question_id')
+INNER JOIN question.question q ON q.id = aw.question_id
+INNER JOIN question.poll p ON p.id = q.poll_id
+')
             ->pipe(new Group(array(
                 "by"=>"aa",
             )))
@@ -60,5 +44,17 @@ INNER JOIN question.question q ON q.id = aw.question_id')
             )))
 
            ->pipe($this->dataStore('question'));
+    }
+
+    protected function OnBeforeSetup()
+    {
+        // Happens when report is about to call setup() method
+
+        return true; // To allow setup() to run
+    }
+    public function setPoll($poll)
+    {
+        $this->poll = $poll->id;
+
     }
 }

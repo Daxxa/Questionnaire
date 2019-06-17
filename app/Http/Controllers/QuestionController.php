@@ -32,11 +32,12 @@ class QuestionController extends Controller
     {
         $questions = Question::all()->where('poll_id', $poll->id);
         $polls = Poll::all()->where('user_id', Auth::id())->where('id', '!=', $poll->id);
+        $mainPolls = Poll::all()->where('user_id',1);
         $included_polls = IncludedPolls::all()->where('poll_id', $poll->id);
         $included_questions = new Collection();
         foreach ($included_polls as $one)
             $included_questions = $included_questions->merge(Question::all()->where('poll_id', $one->included_poll_id));
-        return view('question.index', ['questions' => $questions, 'poll' => $poll, 'polls' => $polls, 'included_polls' => $included_polls, 'included_questions' => $included_questions]);
+        return view('question.index', ['questions' => $questions, 'poll' => $poll, 'polls' => $polls, 'included_polls' => $included_polls, 'included_questions' => $included_questions, 'mainPolls' => $mainPolls]);
     }
 
     /**

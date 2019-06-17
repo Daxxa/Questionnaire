@@ -16,6 +16,7 @@ class AnswerController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,67 +26,76 @@ class AnswerController extends Controller
      */
     public function index(Poll $poll, Question $question, FormBuilder $formBuilder)
     {
-        $answers=Answer::all()->where('question_id',$question->id);
-        $formAdd = $formBuilder->create(AnswerForm::class, [
-            'method' => 'POST',
-            'url' => route('answers.store',[$poll,$question]),
-        ]);
+        $answers = Answer::all()->where('question_id', $question->id);
         $oneanswer = new Answer();
-        $oneanswer->title='';
-        $oneanswer->type='';
+        $oneanswer->title = '';
+        $oneanswer->type = '';
 
-        $this->addMany($formAdd,$question, $answers, $oneanswer);
+        if ($answers->count() == 0 || ($answers->first()->type != 'input' && $answers->first()->type != 'numberInput'  && $answers->first()->type != 'map')){
+            $formAdd = $formBuilder->create(AnswerForm::class, [
+                'method' => 'POST',
+                'url' => route('answers.store', [$poll, $question]),
+            ]);
+
+            $this->addMany($formAdd, $question, $answers, $oneanswer);
+        }
+        else
+            $formAdd = null;
+
+
+
         $forms = array();
-        foreach ($answers as $answer)
-        {
+        foreach ($answers as $answer) {
             $form = $formBuilder->create(AnswerForm::class, [
                 'method' => 'PUT',
-                'url' => route('answers.update',[$poll,$question,$answer]),
+                'url' => route('answers.update', [$poll, $question, $answer]),
             ]);
             $form->setModel($answer);
-            $this->addMany($form,$question, $answers, $answer);
-            array_push($forms,$form);
+            $this->addMany($form, $question, $answers, $answer);
+            array_push($forms, $form);
         }
 
 
-        return view('answer.index',['answers'=>$answers, 'poll'=>$poll, 'question'=>$question,'formAdd'=>$formAdd, 'forms'=>$forms]);
+        return view('answer.index', ['answers' => $answers, 'poll' => $poll, 'question' => $question, 'formAdd' => $formAdd, 'forms' => $forms]);
     }
 
     public function addMany($form, $question, $answers, $oneanswer)
     {
-        $form->addBefore('question_id','question_id','hidden',[
-            'value'=>$question->id,
+        $form->addBefore('question_id', 'question_id', 'hidden', [
+            'value' => $question->id,
         ]);
         $type = ' ';
-        foreach ($answers as $answer){
-            if ($answer->type!='input'){
+        foreach ($answers as $answer) {
+            if ($answer->type != 'input' && $answer->type != 'numberInput'  && $answer->type != 'map') {
                 $type = $answer->type;
             }
         }
-        if($type != ' '){
-            if($type == 'checkbox') $name = 'Checkbox';
-            if($type == 'radiobutton') $name = 'Radiobutton';
-            $form->addBefore('type','type', 'select', [
+        if ($type != ' ') {
+            if ($type == 'checkbox') $name = 'Checkbox';
+            if ($type == 'radiobutton') $name = 'Radiobutton';
+            $form->addBefore('type', 'type', 'select', [
                 'choices' => [$type => $name,],
                 'selected' => $oneanswer->type,
                 'empty_value' => '=== Select type ==='
             ]);
-        }else
-            $form->addBefore('type','type', 'select', [
-                'choices' => ['checkbox' => 'Checkbox', 'radiobutton' => 'Radiobutton','input'=>'Input' ],
+        } else
+            $form->addBefore('type', 'type', 'select', [
+                'choices' => ['checkbox' => 'Checkbox', 'radiobutton' => 'Radiobutton', 'input' => 'Input', 'numberInput' => 'Number', 'map' => 'Maps'],
                 'selected' => $oneanswer->type,
                 'empty_value' => '=== Select type ==='
             ]);
-        $form->addBefore('title','title','text',[
-            'value'=>$oneanswer->title,
+        $form->addBefore('title', 'title', 'text', [
+            'value' => $oneanswer->title,
+            'attr' => ['class' => 'form-control']
         ]);
     }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Poll $poll,Question $question,FormBuilder $formBuilder)
+    public function create(Poll $poll, Question $question, FormBuilder $formBuilder)
     {
 
     }
@@ -93,21 +103,21 @@ class AnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Poll $poll,Question $question,addAnswerRequest $request)
+    public function store(Poll $poll, Question $question, addAnswerRequest $request)
     {
         $answer = new Answer();
         $answer->fill($request->all());
         $answer->save();
-        return redirect()->route('answers.index',[$poll,$question]);
+        return redirect()->route('answers.index', [$poll, $question]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Answer  $answer
+     * @param \App\Answer $answer
      * @return \Illuminate\Http\Response
      */
     public function show(Answer $answer)
@@ -118,7 +128,7 @@ class AnswerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Answer  $answer
+     * @param \App\Answer $answer
      * @return \Illuminate\Http\Response
      */
     public function edit(Answer $answer)
@@ -129,26 +139,26 @@ class AnswerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Answer  $answer
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Answer $answer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Poll $poll, Question $question, Answer $answer)
+    public function update(Request $request, Poll $poll, Question $question, Answer $answer)
     {
         $answer->fill($request->all());
         $answer->save();
-        return redirect()->route('answers.index',[$poll,$question]);
+        return redirect()->route('answers.index', [$poll, $question]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Answer  $answer
+     * @param \App\Answer $answer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Poll $poll, Question $question, Answer $answer)
     {
         $answer->delete();
-        return redirect()->route('answers.index',[$poll,$question]);
+        return redirect()->route('answers.index', [$poll, $question]);
     }
 }

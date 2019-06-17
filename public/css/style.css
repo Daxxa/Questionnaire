@@ -27,6 +27,10 @@ th {
   font-size: larger;
 
 }
+.modal-backdrop.in{
+  z-index: -1;
+  opacity: 0;
+}
 .main-title{
   font-size: 92px;
   background-color: #ddd4cf;

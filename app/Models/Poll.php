@@ -22,5 +22,22 @@ class Poll extends Model
     {
         return $this->hasMany(Question::class);
     }
+    public function polls()
+    {
+        return $this->belongsToMany(Poll::class, 'included_polls', 'poll_id', 'included_poll_id');
+    }
+
+    public function allQuestions()
+    {
+        $polls = $this->polls()->get();
+        $questions = $this->questions()->get();
+        $all = $questions;
+        foreach ($polls as $poll){
+            $all = $all->toBase()->merge($poll->questions()->get());
+
+        }
+        return $all;
+
+    }
 
 }
